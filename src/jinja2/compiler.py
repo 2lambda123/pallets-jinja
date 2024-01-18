@@ -319,7 +319,7 @@ class UndeclaredNameVisitor(NodeVisitor):
         if node.ctx == "load" and node.name in self.names:
             self.undeclared.add(node.name)
             if self.undeclared == self.names:
-                raise VisitorExit()
+                return self.undeclared
         else:
             self.names.discard(node.name)
 
