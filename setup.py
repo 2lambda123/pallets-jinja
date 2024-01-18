@@ -4,5 +4,6 @@ from setuptools import setup
 setup(
     name="Jinja2",
     install_requires=["MarkupSafe>=2.0"],
-    extras_require={"i18n": ["Babel>=2.7"]},
+    install_requires=["MarkupSafe>=2.0", "pytest>=7.1.2", "mock>=4.0.3", "coverage>=6.0.2"],
+    extras_require={"i18n": ["Babel>=2.7"]}
 )
