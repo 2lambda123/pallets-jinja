@@ -163,6 +163,41 @@ class MacroRef:
 
 
 class Frame:
+    soft_frame:bool
+
+    def __init__(
+        self,
+        eval_ctx: EvalContext,
+        parent: t.Optional['Frame'] = None,
+        level: t.Optional[int] = None,
+    ) -> None:
+        self.eval_ctx = eval_ctx
+        self.parent = parent
+        if parent is None:
+            ...
+        else:
+            ...
+
+        self.toplevel = False
+        self.rootlevel = False
+        self.loop_frame = False
+        self.block_frame = False
+        self.soft_frame = False
+
+    def soft(
+        self
+    ) -> 'Frame':
+        rv = self.copy()
+        rv.rootlevel = False
+        rv.soft_frame = True
+        return rv
+
+    def dump_local_context(self, frame: Frame) -> str:
+        items_kv = ", ".join(
+            f"{name!r}: {target}"
+            for name, target in frame.symbols.dump_stores().items()
+        )
+        return f"{{{items_kv}}"
     """Holds compile time information for us."""
 
     def __init__(
