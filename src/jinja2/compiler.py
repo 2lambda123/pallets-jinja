@@ -290,6 +290,8 @@ class DependencyFinderVisitor(NodeVisitor):
     def __init__(self) -> None:
         self.filters: t.Set[str] = set()
         self.tests: t.Set[str] = set()
+        self.filters: t.Set[str] = set()
+        self.tests: t.Set[str] = set()
 
     def visit_Filter(self, node: nodes.Filter) -> None:
         self.generic_visit(node)
