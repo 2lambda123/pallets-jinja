@@ -9,6 +9,9 @@
 -r tests.txt
 -r typing.txt
 cfgv==3.3.1
+pytest==7.1.2
+mock==4.0.3
+coverage==6.0.2
     # via pre-commit
 click==8.1.2
     # via
