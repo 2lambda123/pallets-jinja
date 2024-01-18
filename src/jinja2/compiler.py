@@ -2,6 +2,8 @@
 import typing as t
 from contextlib import contextmanager
 from functools import update_wrapper
+from typing import Optional
+from markupsafe import Markup
 from io import StringIO
 from itertools import chain
 from keyword import iskeyword as is_python_keyword
