@@ -615,6 +615,16 @@ class CodeGenerator(NodeVisitor):
         frame = frame.inner()
         frame.symbols.analyze_node(node)
         macro_ref = MacroRef(node)
+        macro_ref.accesses_caller = False
+        macro_ref.accesses_kwargs = False
+        macro_ref.accesses_varargs = False
+        for idx, arg in enumerate(node.args):
+            if arg.name == 'caller':
+                macro_ref.accesses_caller = True
+            if arg.name == 'kwargs':
+                macro_ref.accesses_kwargs = True
+            if arg.name == 'varargs':
+                macro_ref.accesses_varargs = True
 
         explicit_caller = None
         skip_special_params = set()
