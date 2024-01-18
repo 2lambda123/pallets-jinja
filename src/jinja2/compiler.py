@@ -1,9 +1,12 @@
 """Compiles nodes from the parser into Python code."""
 import typing as t
 from contextlib import contextmanager
+import logging
 from functools import update_wrapper
 from io import StringIO
 from itertools import chain
+import logging
+import sys
 from keyword import iskeyword as is_python_keyword
 
 from markupsafe import escape
@@ -41,6 +44,7 @@ operators = {
 
 
 def optimizeconst(f: F) -> F:
+    """Optimizes the constant value"""
     def new_func(
         self: "CodeGenerator", node: nodes.Expr, frame: "Frame", **kwargs: t.Any
     ) -> t.Any:
