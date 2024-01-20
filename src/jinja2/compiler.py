@@ -163,6 +163,41 @@ class MacroRef:
 
 
 class Frame:
+    soft_frame:bool
+
+    def __init__(
+        self,
+        eval_ctx: EvalContext,
+        parent: t.Optional['Frame'] = None,
+        level: t.Optional[int] = None,
+    ) -> None:
+        self.eval_ctx = eval_ctx
+        self.parent = parent
+        if parent is None:
+            ...
+        else:
+            ...
+
+        self.toplevel = False
+        self.rootlevel = False
+        self.loop_frame = False
+        self.block_frame = False
+        self.soft_frame = False
+
+    def soft(
+        self
+    ) -> 'Frame':
+        rv = self.copy()
+        rv.rootlevel = False
+        rv.soft_frame = True
+        return rv
+
+    def dump_local_context(self, frame: Frame) -> str:
+        items_kv = ", ".join(
+            f"{name!r}: {target}"
+            for name, target in frame.symbols.dump_stores().items()
+        )
+        return f"{{{items_kv}}"
     """Holds compile time information for us."""
 
     def __init__(
@@ -255,6 +290,8 @@ class DependencyFinderVisitor(NodeVisitor):
     def __init__(self) -> None:
         self.filters: t.Set[str] = set()
         self.tests: t.Set[str] = set()
+        self.filters: t.Set[str] = set()
+        self.tests: t.Set[str] = set()
 
     def visit_Filter(self, node: nodes.Filter) -> None:
         self.generic_visit(node)
@@ -282,7 +319,7 @@ class UndeclaredNameVisitor(NodeVisitor):
         if node.ctx == "load" and node.name in self.names:
             self.undeclared.add(node.name)
             if self.undeclared == self.names:
-                raise VisitorExit()
+                return self.undeclared
         else:
             self.names.discard(node.name)
 
@@ -615,6 +652,16 @@ class CodeGenerator(NodeVisitor):
         frame = frame.inner()
         frame.symbols.analyze_node(node)
         macro_ref = MacroRef(node)
+        macro_ref.accesses_caller = False
+        macro_ref.accesses_kwargs = False
+        macro_ref.accesses_varargs = False
+        for idx, arg in enumerate(node.args):
+            if arg.name == 'caller':
+                macro_ref.accesses_caller = True
+            if arg.name == 'kwargs':
+                macro_ref.accesses_kwargs = True
+            if arg.name == 'varargs':
+                macro_ref.accesses_varargs = True
 
         explicit_caller = None
         skip_special_params = set()
