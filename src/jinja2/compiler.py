@@ -1,32 +1,27 @@
 """Compiles nodes from the parser into Python code."""
+import logging
+import sys
 import typing as t
 from contextlib import contextmanager
-import logging
 from functools import update_wrapper
 from io import StringIO
 from itertools import chain
-import logging
-import sys
 from keyword import iskeyword as is_python_keyword
 
-from markupsafe import escape
-from markupsafe import Markup
+from markupsafe import Markup, escape
 
 from . import nodes
 from .exceptions import TemplateAssertionError
-from .idtracking import Symbols
-from .idtracking import VAR_LOAD_ALIAS
-from .idtracking import VAR_LOAD_PARAMETER
-from .idtracking import VAR_LOAD_RESOLVE
-from .idtracking import VAR_LOAD_UNDEFINED
+from .idtracking import (VAR_LOAD_ALIAS, VAR_LOAD_PARAMETER, VAR_LOAD_RESOLVE,
+                         VAR_LOAD_UNDEFINED, Symbols)
 from .nodes import EvalContext
 from .optimizer import Optimizer
-from .utils import _PassArg
-from .utils import concat
+from .utils import _PassArg, concat
 from .visitor import NodeVisitor
 
 if t.TYPE_CHECKING:
     import typing_extensions as te
+
     from .environment import Environment
 
 F = t.TypeVar("F", bound=t.Callable[..., t.Any])
@@ -834,7 +829,7 @@ class CodeGenerator(NodeVisitor):
         assert frame is None, "no root frame allowed"
         eval_ctx = EvalContext(self.environment, self.name)
 
-        from .runtime import exported, async_exported
+        from .runtime import async_exported, exported
 
         if self.environment.is_async:
             exported_names = sorted(exported + async_exported)
