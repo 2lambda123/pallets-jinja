@@ -179,8 +179,7 @@ Run the basic test suite with pytest.
 
     $ pytest
 
-This runs the tests for the current environment, which is usually
-sufficient. CI will run the full suite when you submit your pull
+These steps set up the development environment, install dependencies, and run the tests using pytest. CI will run the full suite when you submit your pull
 request. You can run the full test suite with tox if you don't want to
 wait.
 
@@ -189,7 +188,7 @@ wait.
     $ tox
 
 
-Running test coverage
+Setting up the development environment, installing dependencies, and running the tests using pytest.
 ~~~~~~~~~~~~~~~~~~~~~
 
 Generating a report of lines that do not have test coverage can indicate
