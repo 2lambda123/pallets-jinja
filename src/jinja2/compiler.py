@@ -8,15 +8,20 @@ from io import StringIO
 from itertools import chain
 from keyword import iskeyword as is_python_keyword
 
-from markupsafe import Markup, escape
+from markupsafe import escape
+from markupsafe import Markup
 
 from . import nodes
 from .exceptions import TemplateAssertionError
-from .idtracking import (VAR_LOAD_ALIAS, VAR_LOAD_PARAMETER, VAR_LOAD_RESOLVE,
-                         VAR_LOAD_UNDEFINED, Symbols)
+from .idtracking import Symbols
+from .idtracking import VAR_LOAD_ALIAS
+from .idtracking import VAR_LOAD_PARAMETER
+from .idtracking import VAR_LOAD_RESOLVE
+from .idtracking import VAR_LOAD_UNDEFINED
 from .nodes import EvalContext
 from .optimizer import Optimizer
-from .utils import _PassArg, concat
+from .utils import _PassArg
+from .utils import concat
 from .visitor import NodeVisitor
 
 if t.TYPE_CHECKING:
