@@ -462,8 +462,7 @@ class CodeGenerator(NodeVisitor):
                 self.stream.write("\n" * self._new_lines)
                 self.code_lineno += self._new_lines
                 if self._write_debug_info is not None:
-                    self.debug_info.append(
-                        (self._write_debug_info, self.code_lineno))
+                    self.debug_info.append((self._write_debug_info, self.code_lineno))
                     self._write_debug_info = None
             self._first_write = False
             self.stream.write("    " * self._indentation)
@@ -570,8 +569,7 @@ class CodeGenerator(NodeVisitor):
                 # blocks are defined, as this step may be skipped during compile time
                 self.writeline("try:")
                 self.indent()
-                self.writeline(
-                    f"{id_map[name]} = environment.{dependency}[{name!r}]")
+                self.writeline(f"{id_map[name]} = environment.{dependency}[{name!r}]")
                 self.outdent()
                 self.writeline("except KeyError:")
                 self.indent()
@@ -591,8 +589,7 @@ class CodeGenerator(NodeVisitor):
             if action == VAR_LOAD_PARAMETER:
                 pass
             elif action == VAR_LOAD_RESOLVE:
-                self.writeline(
-                    f"{target} = {self.get_resolve_func()}({param!r})")
+                self.writeline(f"{target} = {self.get_resolve_func()}({param!r})")
             elif action == VAR_LOAD_ALIAS:
                 self.writeline(f"{target} = {param}")
             elif action == VAR_LOAD_UNDEFINED:
@@ -824,8 +821,7 @@ class CodeGenerator(NodeVisitor):
             self.write("})")
         if not frame.block_frame and not frame.loop_frame and public_names:
             if len(public_names) == 1:
-                self.writeline(
-                    f"context.exported_vars.add({public_names[0]!r})")
+                self.writeline(f"context.exported_vars.add({public_names[0]!r})")
             else:
                 names_str = ", ".join(map(repr, public_names))
                 self.writeline(f"context.exported_vars.update(({names_str}))")
@@ -845,8 +841,7 @@ class CodeGenerator(NodeVisitor):
         else:
             exported_names = sorted(exported)
 
-        self.writeline("from jinja2.runtime import " +
-                       ", ".join(exported_names))
+        self.writeline("from jinja2.runtime import " + ", ".join(exported_names))
 
         # if we want a deferred initialization we cannot move the
         # environment into a local name
@@ -906,8 +901,7 @@ class CodeGenerator(NodeVisitor):
                 self.writeline("if parent_template is not None:")
             self.indent()
             if not self.environment.is_async:
-                self.writeline(
-                    "yield from parent_template.root_render_func(context)")
+                self.writeline("yield from parent_template.root_render_func(context)")
             else:
                 self.writeline(
                     "async for event in parent_template.root_render_func(context):"
@@ -1011,8 +1005,7 @@ class CodeGenerator(NodeVisitor):
             if not self.has_known_extends:
                 self.writeline("if parent_template is not None:")
                 self.indent()
-            self.writeline(
-                'raise TemplateRuntimeError("extended multiple times")')
+            self.writeline('raise TemplateRuntimeError("extended multiple times")')
 
             # if we have a known extends already we don't need that code here
             # as we know that the template execution will end here.
@@ -1024,11 +1017,9 @@ class CodeGenerator(NodeVisitor):
         self.writeline("parent_template = environment.get_template(", node)
         self.visit(node.template, frame)
         self.write(f", {self.name!r})")
-        self.writeline(
-            "for name, parent_block in parent_template.blocks.items():")
+        self.writeline("for name, parent_block in parent_template.blocks.items():")
         self.indent()
-        self.writeline(
-            "context.blocks.setdefault(name, []).append(parent_block)")
+        self.writeline("context.blocks.setdefault(name, []).append(parent_block)")
         self.outdent()
 
         # if this extends statement was in the root level we can take
@@ -1080,8 +1071,7 @@ class CodeGenerator(NodeVisitor):
                 "._body_stream:"
             )
         else:
-            self.writeline(
-                "yield from template._get_default_module()._body_stream")
+            self.writeline("yield from template._get_default_module()._body_stream")
             skip_event_yield = True
 
         if not skip_event_yield:
@@ -1105,8 +1095,7 @@ class CodeGenerator(NodeVisitor):
                 f"{f_name}(context.get_all(), True, {self.dump_local_context(frame)})"
             )
         else:
-            self.write(
-                f"_get_default_module{self.choose_async('_async')}(context)")
+            self.write(f"_get_default_module{self.choose_async('_async')}(context)")
 
     def visit_Import(self, node: nodes.Import, frame: Frame) -> None:
         """Visit regular imports."""
@@ -1154,8 +1143,7 @@ class CodeGenerator(NodeVisitor):
         if var_names:
             if len(var_names) == 1:
                 name = var_names[0]
-                self.writeline(
-                    f"context.vars[{name!r}] = {frame.symbols.ref(name)}")
+                self.writeline(f"context.vars[{name!r}] = {frame.symbols.ref(name)}")
             else:
                 names_kv = ", ".join(
                     f"{name!r}: {frame.symbols.ref(name)}" for name in var_names
@@ -1163,8 +1151,7 @@ class CodeGenerator(NodeVisitor):
                 self.writeline(f"context.vars.update({{{names_kv}}})")
         if discarded_names:
             if len(discarded_names) == 1:
-                self.writeline(
-                    f"context.exported_vars.discard({discarded_names[0]!r})")
+                self.writeline(f"context.exported_vars.discard({discarded_names[0]!r})")
             else:
                 names_str = ", ".join(map(repr, discarded_names))
                 self.writeline(
@@ -1248,8 +1235,7 @@ class CodeGenerator(NodeVisitor):
         self.writeline(self.choose_async("async for ", "for "), node)
         self.visit(node.target, loop_frame)
         if extended_loop:
-            self.write(
-                f", {loop_ref} in {self.choose_async('Async')}LoopContext(")
+            self.write(f", {loop_ref} in {self.choose_async('Async')}LoopContext(")
         else:
             self.write(" in ")
 
@@ -1868,8 +1854,7 @@ class CodeGenerator(NodeVisitor):
         self.visit(node.node, frame)
         extra_kwargs = {"caller": "caller"} if forward_caller else None
         loop_kwargs = {"_loop_vars": "_loop_vars"} if frame.loop_frame else {}
-        block_kwargs = {
-            "_block_vars": "_block_vars"} if frame.block_frame else {}
+        block_kwargs = {"_block_vars": "_block_vars"} if frame.block_frame else {}
         if extra_kwargs:
             extra_kwargs.update(loop_kwargs, **block_kwargs)
         elif loop_kwargs or block_kwargs:
