@@ -1,12 +1,11 @@
 """Compiles nodes from the parser into Python code."""
+import logging
+import sys
 import typing as t
 from contextlib import contextmanager
-import logging
 from functools import update_wrapper
 from io import StringIO
 from itertools import chain
-import logging
-import sys
 from keyword import iskeyword as is_python_keyword
 
 from markupsafe import escape
